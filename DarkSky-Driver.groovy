@@ -68,7 +68,7 @@ metadata {
         attribute "weather", "string";
         attribute "feelsLike", "number";
         attribute "forecastIcon", "string";
-	attribute "weatherIcon", "string";
+		attribute "weatherIcon", "string";
         attribute "percentPrecip", "string";
         attribute "pressure", "number";
         attribute "dewpoint", "number";
@@ -94,7 +94,7 @@ metadata {
         attribute "precipTomorrow", "string";
         attribute "precipDayAfterTomorrow", "string";
         attribute "moonPhase", "string";
- 	attribute "DriverAuthor", "string";
+ 		attribute "DriverAuthor", "string";
         attribute "DriverVersion", "string";
         attribute "DriverStatus", "string";
 		attribute "DriverUpdate", "string";
@@ -325,7 +325,7 @@ def ForcePoll()
             sendEvent(name: "observationTime", value: currentDateTime.format(dateFormat), isStateChange: true);
 
             // Select Icon 
-            sendEvent(name: "weatherIcon", value: current.icon, isStateChange: true);
+            sendEvent(name: "weatherIcon", value: summary.replaceAll("\\s", "").toLowerCase(), isStateChange: true);
             sendEvent(name: "forecastIcon", value: tomorrow.icon, isStateChange: true);
             
             def distanceMeasurement = "";
@@ -502,7 +502,7 @@ def updateCheck(){
 def setVersion(){
     state.version = "3.2.0"
     state.InternalName = "DarkSky Weather Driver"
-    state.CobraAppCheck = "customWeather.json"
+   	state.CobraAppCheck = "customWeather.json"
     sendEvent(name: "DriverAuthor", value: "Adam Gardner and Andrew Parker", isStateChange: true)
     sendEvent(name: "DriverVersion", value: state.version, isStateChange: true)
 }
