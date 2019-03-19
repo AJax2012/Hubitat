@@ -68,7 +68,7 @@ metadata {
         attribute "weather", "string";
         attribute "feelsLike", "number";
         attribute "forecastIcon", "string";
-		attribute "weatherIcon", "string";
+	attribute "weatherIcon", "string";
         attribute "percentPrecip", "string";
         attribute "pressure", "number";
         attribute "dewpoint", "number";
@@ -94,7 +94,7 @@ metadata {
         attribute "precipTomorrow", "string";
         attribute "precipDayAfterTomorrow", "string";
         attribute "moonPhase", "string";
- 		attribute "DriverAuthor", "string";
+ 	attribute "DriverAuthor", "string";
         attribute "DriverVersion", "string";
         attribute "DriverStatus", "string";
 		attribute "DriverUpdate", "string";
