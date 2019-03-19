@@ -53,7 +53,7 @@
  */
 
 metadata {
-    definition (name: "AJax2012 DarkSky Driver", namespace: "thisone", author: "Adam Gardner") {
+    definition (name: "DarkSky Weather Driver", namespace: "Cobra", author: "Adam Gardner & Andrew Parker") {
         capability "Actuator";
         capability "Sensor";
         capability "Temperature Measurement";
@@ -335,22 +335,22 @@ def ForcePoll()
             
             // start summary string builder section
             if(summaryType == true) {
-            
-                if (WeatherSummeryFormat == "Celsius, Miles & MPH"){
-                    sendEvent(name: "weatherSummaryFormat", value: "Celsius, Miles & MPH", isStateChange: true)
-                    distanceMeasurement = "Miles";
+
+                if (weatherFormat == "Celsius, Miles & MPH"){
+                    sendEvent(name: "weatherFormat", value: "Celsius, Miles & MPH", isStateChange: true)
+                    distanceMeasurement = "miles";
                     speedMeasurement = "mph";
                 }
                     
-                if (WeatherSummeryFormat == "Fahrenheit, Miles & MPH"){
-                    sendEvent(name: "weatherSummaryFormat", value: "Fahrenheit, Miles & MPH", isStateChange: true)
-                    distanceMeasurement = "Miles";
+                if (weatherFormat == "Fahrenheit, Miles & MPH"){
+                    sendEvent(name: "weatherFormat", value: "Fahrenheit, Miles & MPH", isStateChange: true)
+                    distanceMeasurement = "miles";
                     speedMeasurement = "mph";
                 }
                     
-                if (WeatherSummeryFormat == "Celsius, Kilometres & KPH"){
-                    sendEvent(name: "weatherSummaryFormat", value: "Celsius, Kilometres & KPH", isStateChange: true)
-                    distanceMeasurement = "Kilometres";
+                if (weatherFormat == "Celsius, Kilometres & KPH"){
+                    sendEvent(name: "weatherFormat", value: "Celsius, Kilometres & KPH", isStateChange: true)
+                    distanceMeasurement = "kilometres";
                     speedMeasurement = "kph";
                 }
 
@@ -372,15 +372,11 @@ def ForcePoll()
                 builder.append(" degrees. Wind is from the ");
                 builder.append(windDirection);
                 builder.append(" at ");
-                builder.append(windSpeed);
-                builder.append(" ");
-                builder.append(speedMeasurement);
+                builder.append("${windSpeed} ${speedMeasurement}");
                 builder.append(", with gusts up to ");
-                builder.append(windGust);
-                builder.append(speedMeasurement);
+                builder.append("${windGust}${speedMeasurement}");
                 builder.append(". Visibility is around ");
-                builder.append(visibility);
-                builder.append(distanceMeasurement);
+                builder.append("${visibility} ${distanceMeasurement}");
                 builder.append(". There is a ");
                 builder.append(todayPrecipProbability);
                 builder.append("% chance of ");
@@ -393,21 +389,21 @@ def ForcePoll()
             // start short summary string builder section
             if(summaryType == false){
                 
-                if (WeatherSummeryFormat == "Celsius, Miles & MPH"){
-                    sendEvent(name: "weatherSummaryFormat", value: "Celsius, Miles & MPH", isStateChange: true)
-                    distanceMeasurement = "Miles";
+                if (weatherFormat == "Celsius, Miles & MPH"){
+                    sendEvent(name: "weatherFormat", value: "Celsius, Miles & MPH", isStateChange: true)
+                    distanceMeasurement = "miles";
                     speedMeasurement = "mph";
                 }
             
-                if (WeatherSummeryFormat == "Fahrenheit, Miles & MPH"){
-                    sendEvent(name: "weatherSummaryFormat", value: "Fahrenheit, Miles & MPH", isStateChange: true)
-                    distanceMeasurement = "Miles";
+                if (weatherFormat == "Fahrenheit, Miles & MPH"){
+                    sendEvent(name: "weatherFormat", value: "Fahrenheit, Miles & MPH", isStateChange: true)
+                    distanceMeasurement = "miles";
                     speedMeasurement = "mph";
                 }
             
-                if (WeatherSummeryFormat ==  "Celsius, Kilometres & KPH"){
-                    sendEvent(name: "weatherSummaryFormat", value:  "Celsius, Kilometres & KPH", isStateChange: true)
-                    distanceMeasurement = "Kilometres";
+                if (weatherFormat ==  "Celsius, Kilometres & KPH"){
+                    sendEvent(name: "weatherFormat", value:  "Celsius, Kilometres & KPH", isStateChange: true)
+                    distanceMeasurement = "kilometres";
                     speedMeasurement = "KPH";
                 }
 
@@ -424,11 +420,9 @@ def ForcePoll()
                 builder.append(". Wind Direction: ");
                 builder.append(windDirection);
                 builder.append(".  Wind Speed: ");
-                builder.append(windSpeed);
-                builder.append(speedMeasurement);
+                builder.append("${windSpeed}${speedMeasurement}");
                 builder.append(". Gust: ");
-                builder.append(windGust);
-                builder.append(speedMeasurement);
+                builder.append("${windGust}${speedMeasurement}");
                 builder.append(". ");
                 builder.append(precipType);
                 builder.append(": ");
@@ -506,9 +500,9 @@ def updateCheck(){
 }
 
 def setVersion(){
-    state.version = "1.0.0"
-    state.InternalName = "AJax2012 DarkSky Weather"
-   	state.CobraAppCheck = "customWeather.json"
-    sendEvent(name: "DriverAuthor", value: "Adam Gardner", isStateChange: true)
+    state.version = "3.2.0"
+    state.InternalName = "DarkSky Weather Driver"
+    state.CobraAppCheck = "customWeather.json"
+    sendEvent(name: "DriverAuthor", value: "Adam Gardner and Andrew Parker", isStateChange: true)
     sendEvent(name: "DriverVersion", value: state.version, isStateChange: true)
 }
