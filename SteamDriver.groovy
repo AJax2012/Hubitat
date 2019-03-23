@@ -69,8 +69,7 @@ def CalculateRefreshTime(String option) {
 
     if (unit.contains("Second")) {
         schedule("0/${numb} * * ? * * *", ForcePoll);
-    } 
-    if (unit.contains("Minute")) {
+    } else {
         schedule("${numb} * * ? * * *", ForcePoll);
     }
 }
