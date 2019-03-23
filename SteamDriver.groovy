@@ -1,8 +1,9 @@
 metadata {
     definition (name: "Steam API Driver", namespace: "AJax2012", author: "Adam Gardner") {
-        capability "Switch"
+        capability "Switch";
         capability "Sensor";
-        command "ForcePoll"
+        command "ForcePoll";
+        command "poll";
 
         attribute "userName", "string";
         attribute "avatar", "string";
@@ -16,9 +17,28 @@ metadata {
             input "apiKey", "text", required: true, title: "API Key";
             input "steamId", "text", required: true, title: "steamID64 (https://steamidfinder.com/lookup)";
             input "autoPoll", "bool", required: false, title: "Enable Auto Poll";
-            input "pollInterval", "enum", title: "Auto Poll Interval:", required: false, defaultValue: "1 Minute", options: ["5 Seconds", "10 Seconds", "15 Seconds", "30 Seconds", "1 Minute", "3 Minutes"];
+            input "pollInterval", "enum", title: "Auto Poll Interval:", required: false, options: ["1 Second","5 Seconds", "10 Seconds", "15 Seconds", "30 Seconds", "1 Minute", "3 Minutes"];
         }
     }
+}
+
+def installed() {
+    initialize();
+}
+
+def updated() {
+    initialize();
+}
+
+def initialize() {
+    unschedule();
+    if (autoPoll){
+        Schedule();
+    }
+}
+
+def poll() {
+    ForcePoll();
 }
 
 def ForcePoll()
@@ -56,21 +76,17 @@ def ForcePoll()
     } catch (e) {
         log.debug e
     }
-
-    if(autoPoll){
-        CalculateRefreshTime(pollInterval);
-    }
 }
 
-def CalculateRefreshTime(String option) {
-    def array = option.split();
+def Schedule() {
+    def array = pollInterval.split();
     def numb = array[0];
     def unit = array[1];
 
     if (unit.contains("Second")) {
-        schedule("0/${numb} * * ? * * *", ForcePoll);
+        schedule("0/${numb} * * ? * * *", poll);
     } else {
-        schedule("${numb} * * ? * * *", ForcePoll);
+        schedule("${numb} * * ? * * *", poll);
     }
 }
 
