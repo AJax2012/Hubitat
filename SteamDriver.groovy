@@ -58,7 +58,7 @@ def ForcePoll()
     }
 
     if(autoPoll){
-        CalculateSeconds(pollInterval);
+        CalculateRefreshTime(pollInterval);
     }
 }
 
@@ -69,7 +69,8 @@ def CalculateRefreshTime(String option) {
 
     if (unit.contains("Second")) {
         schedule("0/${numb} * * ? * * *", ForcePoll);
-    } else {
+    } 
+    if (unit.contains("Minute")) {
         schedule("${numb} * * ? * * *", ForcePoll);
     }
 }
