@@ -16,7 +16,7 @@ metadata {
             input "apiKey", "text", required: true, title: "API Key";
             input "steamId", "text", required: true, title: "steamID64 (https://steamidfinder.com/lookup)";
             input "autoPoll", "bool", required: false, title: "Enable Auto Poll";
-            input "pollInterval", "enum", title: "Auto Poll Interval:", required: false, defaultValue: "1 Minute", options: ["1 Second", "5 Seconds", "10 Seconds", "15 Seconds", "30 Seconds", "1 Minute", "3 Minutes"];
+            input "pollInterval", "enum", title: "Auto Poll Interval:", required: false, defaultValue: "1 Minute", options: ["5 Seconds", "10 Seconds", "15 Seconds", "30 Seconds", "1 Minute", "3 Minutes"];
         }
     }
 }
