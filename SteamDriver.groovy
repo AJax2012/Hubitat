@@ -1,5 +1,6 @@
 metadata {
     definition (name: "Steam API Driver", namespace: "AJax2012", author: "Adam Gardner") {
+        capability "Motion Sensor"
         capability "Switch";
         capability "Sensor";
         command "ForcePoll";
@@ -66,11 +67,13 @@ def ForcePoll()
                 sendEvent(name: "currentGame", value: data.gameextrainfo, isStateChange: true);
                 sendEvent(name: "status", value: "in game", unit: rainUnit, isStateChange: true);
                 sendEvent(name: "switch", value: "on");
+                sendEvent(name: "motion", value: "on");
             }
             else {
                 sendEvent(name: "currentGame", value: "n/a", isStateChange: true);
                 sendEvent(name: "status", value: "offline", unit: rainUnit, isStateChange: true);
                 sendEvent(name: "switch", value: "off")
+                sendEvent(name: "motion", value: "off");
             }
         }
     } catch (e) {
