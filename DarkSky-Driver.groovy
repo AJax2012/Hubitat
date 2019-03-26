@@ -127,47 +127,27 @@ metadata {
     }
 }
 
+def installed() {
+    initialize();
+}
+
 def updated() {
-    log.debug "updated called"
-    updateCheck();
-    version();
-    state.NumOfPolls = 0;
-    ForcePoll();
-    def pollIntervalCmd = (settings?.pollInterval ?: "5 Minutes").replace(" ", "");
-    if(autoPoll)
-        "runEvery${pollIntervalCmd}"(pollSchedule);
-    
-    def changeOver = cutOff;
-    schedule(changeOver, ResetPollCount);
+    initialize();
 }
 
-def ResetPollCount(){
-    state.NumOfPolls = -1;
-    log.info "Poll counter reset..";
-    ForcePoll();
+def initialize() {
+    unschedule();
+    if (autoPoll){
+        Schedule();
+    }
 }
 
-def pollSchedule()
-{
+def poll() {
     ForcePoll();
-}
-              
-def parse(String description) {
-}
-
-def poll()
-{
-    if(now() - state.lastPoll > (pollIntervalLimit * 60000))
-        ForcePoll();
-    else
-        log.debug "Poll called before interval threshold was reached";
 }
 
 def ForcePoll()
 {
-    // state.NumOfPolls += 1;
-    // log.info " state.NumOfPolls = $state.NumOfPolls";
-   
     log.debug "ForcePoll called";
     def params = [uri: "https://api.darksky.net/forecast/${apiKey}/${lat},${lng}"];
     
@@ -477,64 +457,21 @@ def ForcePoll()
     }
 }
 
+def Schedule() {
+    def array = pollInterval.split();
+    def numb = array[0];
+    def unit = array[1];
+
+    if (unit.contains("Second")) {
+        schedule("0/${numb} * * ? * * *", poll);
+    } else {
+        schedule("${numb} * * ? * * *", poll);
+    }
+}
+
 def Report(){
     def obvTime = observationTime.value
     log.info "$obvTime"  
-}
-
-
-def version(){
-    updateCheck();
-    schedule("0 0 9 ? * FRI *", updateCheck())
-}
-    
-
-def updateCheck(){
-    setVersion();
-	def paramsUD = [uri: "http://update.hubitat.uk/json/${state.CobraAppCheck}"];
-    try {
-        httpGet(paramsUD) { respUD ->
-//  log.warn " Version Checking - Response Data: ${respUD.data}"   // Troubleshooting Debug Code **********************
-            def copyrightRead = (respUD.data.copyright)
-            state.Copyright = copyrightRead
-            def newVerRaw = (respUD.data.versions.Driver.(state.InternalName))
-    //		log.warn "$state.InternalName = $newVerRaw"
-            def newVer = newVerRaw.replace(".", "")
-//			log.warn "$state.InternalName = $newVer"
-            def currentVer = state.version.replace(".", "")
-            state.UpdateInfo = "Updated: "+ state.newUpdateDate + " - "+ (respUD.data.versions.UpdateInfo.Driver.(state.InternalName))
-            state.author = (respUD.data.author)
-            state.newUpdateDate = (respUD.data.Comment)
-        
-            if(newVer == "NLS"){
-                state.Status = "<b>** This driver is no longer supported by $state.author  **</b>"       
-                log.warn "** This driver is no longer supported by $state.author **"      
-            }           
-            else if(currentVer < newVer){
-                state.Status = "<b>New Version Available (Version: $newVerRaw)</b>"
-                log.warn "** There is a newer version of this driver available  (Version: $newVerRaw) **"
-                log.warn "** $state.UpdateInfo **"
-            } 
-            else{ 
-                state.Status = "Current"
-                log.info "You are using the current version of this driver"
-            }
-        }
-    } 
-    catch (e) {
-        log.error "Something went wrong: CHECK THE JSON FILE AND IT'S URI -  $e"
-        }
-    if(state.Status == "Current"){
-        state.UpdateInfo = "N/A"
-        sendEvent(name: "DriverUpdate", value: state.UpdateInfo, isStateChange: true)
-        sendEvent(name: "DriverStatus", value: state.Status, isStateChange: true)
-        }
-    else{
-        sendEvent(name: "DriverUpdate", value: state.UpdateInfo, isStateChange: true)
-        sendEvent(name: "DriverStatus", value: state.Status, isStateChange: true)
-    }   
-    sendEvent(name: "DriverAuthor", value: state.author, isStateChange: true)
-    sendEvent(name: "DriverVersion", value: state.version, isStateChange: true)
 }
 
 def setVersion(){
