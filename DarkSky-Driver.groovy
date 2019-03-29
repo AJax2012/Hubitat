@@ -54,7 +54,7 @@
  */
 
 metadata {
-    definition (name: "DarkSky Weather Driver 2", namespace: "Cobra", author: "Adam Gardner & Andrew Parker") {
+    definition (name: "DarkSky Weather Driver 2", namespace: "AJax", author: "Adam Gardner") {
         capability "Actuator";
         capability "Sensor";
         capability "Temperature Measurement";
@@ -477,8 +477,7 @@ def Report(){
 def setVersion(){
     state.version = "3.2.0"
     state.InternalName = "DarkSky Weather Driver"
-   	state.CobraAppCheck = "customWeather.json"
-    sendEvent(name: "DriverAuthor", value: "Adam Gardner and Andrew Parker", isStateChange: true)
+    sendEvent(name: "DriverAuthor", value: "Adam Gardner", isStateChange: true)
     sendEvent(name: "DriverVersion", value: state.version, isStateChange: true)
 }
 
